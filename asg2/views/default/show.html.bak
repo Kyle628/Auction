@@ -1,0 +1,83 @@
+{{extend 'layout.html'}}
+
+<h1>
+{{=listing.title}}
+</h1>
+
+{{for image in images:}}
+
+<img width="150px"
+         src="{{=URL('download', args=image.image)}}" onmouseover="this.width=400;this.height=400;" onmouseout="this.width=150;this.height=150" />
+
+
+{{pass}}
+
+<h2>
+Listing Info:
+</h2>
+<ul>
+    <li>Posted On {{=listing.date}}</li>
+    <li>${{=listing.price}}</li>
+    <li>{{=listing.category}}</li>
+    {{if (listing.available):}}
+    <li>Still Available</li>
+    {{else:}}
+    <li>Sold</li>
+    {{pass}}
+</ul>
+
+<h3>
+Seller Info:
+</h3>
+<ul>
+    <li>{{=listing.seller.name}}</li>
+    <li>Phone: {{=listing.seller.phone}}</li>
+    <li>Email: {{=listing.seller.email}}</li>
+    <li>Seller Rating: <div id = 'rating'>{{=listing.seller.rating}}</div></li>
+</ul>
+
+<button id='upvote'>
+Upvote This Seller
+</button>
+
+<button id='downvote'>
+downvote This Seller
+</button>
+
+
+<script>
+    $(document).ready(function() {
+        var url = "{{=URL('default', 'upvote', args=listing.seller)}}"
+        var url2 = "{{=URL('default', 'downvote', args=listing.seller)}}"
+        var count = 0;
+        $('#upvote').click(function() {
+            count = count + 1;
+            $.post(url, function(result){
+                $("#rating").html(result);
+            });
+            $('#upvote').toggle();
+            if (count < 0) {
+                $('#downvote').toggle()
+            };
+            if (count == 0) {
+                $('#downvote').toggle()
+                $('#upvote').toggle()
+            };
+        });
+        $('#downvote').click(function() {
+            count = count - 1;
+            $.post(url2, function(result){
+                $("#rating").html(result);
+            });
+            $('#downvote').toggle();
+            if (count > 0) {
+                $('#upvote').toggle()
+            };
+            if (count == 0) {
+                $('#downvote').toggle()
+                $('#upvote').toggle()
+            };
+        });
+        
+    });
+</script>

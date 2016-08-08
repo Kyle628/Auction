@@ -1,0 +1,29 @@
+db = DAL("sqlite://storage.sqlite")
+
+from gluon.tools import Auth
+auth = Auth(db)
+auth.define_tables(username=True)
+
+db.define_table('sellers',
+   Field('name'),
+   Field('phone'),
+   Field('email'),
+   Field('votes', 'integer', default=0, readable=False, writable=False))
+
+db.define_table('listings',
+   Field('seller', 'reference sellers', readable=False, writable=False),
+   Field('title', unique=True),
+   Field('date'),
+   Field('price', 'double'),
+   Field('category'),
+   Field('available', 'boolean'),
+   Field('body', 'text'))
+
+db.define_table('images',
+   Field('image', 'upload'),
+   Field('listing_id', 'reference listings', readable=False, writable=False))
+
+
+
+db.listings.title.requires = IS_NOT_IN_DB(db, db.listings.title)
+db.listings.category.requires = IS_IN_SET(["car", "bike", "book", "music", "outdoors", "household", "misc"])

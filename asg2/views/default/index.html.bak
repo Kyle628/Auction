@@ -1,0 +1,10 @@
+{{extend 'layout.html'}}
+<h1>Current Listings</h1>
+
+<a href="add.html"><button>Add A listing</button></a>
+
+<ul>
+{{for listing in listings:}}
+{{=LI(A(listing.title, _href=URL("show", args=listing.id)))}}
+{{pass}}
+</ul>

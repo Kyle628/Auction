@@ -1,0 +1,7 @@
+{{extend 'layout.html'}}
+<h1>
+Add Some Pictures To Your Listing!
+</h1>
+{{=form}}
+
+{{=A('Go back to listings', _href=URL('index'))}}
